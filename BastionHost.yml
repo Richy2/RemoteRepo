@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: A simple window EC2 instance jumbox by Cloudspace
+Resources:
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-04d29b6f966df1537 # nothern virginia window 2019
+      InstanceType: t2.micro
+      SubnetId:  
+        Fn::ImportValue: Network-Stack-PublicSubnet2
+      SecurityGroupIds:
+        - Fn::ImportValue: Network-Stack-WebServerSecurityGroup
+      Tags:
+        - Key: Name
+          Value: BastionHost
+       

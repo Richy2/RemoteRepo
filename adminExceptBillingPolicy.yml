@@ -1,0 +1,86 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: create an IAM users.
+Parameters:
+   IAMPassword: 
+    NoEcho: true
+    Description: The IAM user password (won't be echoed)
+    Type: String
+    MinLength: 1
+    MaxLength: 41
+    AllowedPattern: "[a-zA-Z0-9]*"
+    ConstraintDescription: must contain only alphanumeric characters.
+Resources:
+  Ari:
+    Type: AWS::IAM::User
+    Properties:
+      LoginProfile: 
+        Password: !Ref IAMPassword
+        PasswordResetRequired: Yes
+      UserName: Ariane
+  Rich:
+    Type: AWS::IAM::User
+    Properties:
+      LoginProfile:
+        Password: !Ref IAMPassword  
+        PasswordResetRequired: Yes
+      UserName: Richard 
+  Pam:
+    Type: AWS::IAM::User
+    Properties:
+      LoginProfile:
+        Password: !Ref IAMPassword
+        PasswordResetRequired: Yes
+      UserName: Pamela
+  Safie:
+    Type: AWS::IAM::User
+    Properties:
+      LoginProfile:
+        Password: !Ref IAMPassword
+        PasswordResetRequired: Yes
+      UserName: Safie
+  Raf:
+    Type: AWS::IAM::User
+    Properties:
+      LoginProfile:
+        Password: !Ref IAMPassword
+        PasswordResetRequired: Yes
+      UserName: Rafi      
+  MyGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: CloudspaceEngineersLion  
+  Users:
+    Type: AWS::IAM::UserToGroupAddition
+    Properties:
+      GroupName:
+        Ref: MyGroup
+      Users:
+      - Ref: Ari
+      - Ref: Rich
+      - Ref: Pam
+      - Ref: Safie
+      - Ref: Raf
+  Policy1:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: AdministratorAccess
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: '*'
+            Resource: '*'
+      Groups:
+        - !Ref MyGroup
+  Policy2:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: DenyBillingAcces
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Deny
+            Action: 'aws-portal:*'
+            Resource: '*'
+      Groups:
+        - !Ref MyGroup

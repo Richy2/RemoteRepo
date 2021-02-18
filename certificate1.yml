@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  AWS CloudFormation Sample Template to create a certificate template.
+Parameters:
+  DomainName:
+    Type: String
+    Description: The DNS name of an existing Amazon Route 53 hosted zone
+    AllowedPattern: '(?!-)[a-zA-Z0-9-.]{1,63}(?<!-)'
+    ConstraintDescription: must be a valid DNS zone name.
+  AlternativeDomainName:
+    Type: String
+    Description: The DNS name of an existing Amazon Route 53 hosted zone
+    # AllowedPattern: '(?!-)[a-zA-Z0-9-.]{1,63}(?<!-)'
+    # ConstraintDescription: must be a valid DNS zone name.
+#certificate-Stack
+Resources:
+  LoadBalancerSSLCert:
+    Type: 'AWS::CertificateManager::Certificate'
+    Properties:
+      DomainName: !Ref DomainName
+      DomainValidationOptions:
+        - DomainName: !Ref DomainName
+          ValidationDomain: !Ref DomainName
+      ValidationMethod: DNS
+      SubjectAlternativeNames:
+        - !Ref AlternativeDomainName
+      Tags:
+        - Key: Name
+          Value: LoadBalancerSSLCert
+
+Outputs:
+  CertificateARN:
+    Description: A reference to the certificate ARN 
+    Value: !Ref LoadBalancerSSLCert
+    Export:
+      Name: !Sub '${AWS::StackName}-LoadBalancerSSLCert' 
+       

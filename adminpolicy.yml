@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: create an IAM users.
+Parameters:
+   IAMPassword: 
+    NoEcho: true
+    Description: The IAM user password (won't be echoed)
+    Type: String
+    MinLength: 1
+    MaxLength: 41
+    AllowedPattern: "[a-zA-Z0-9]*"
+    ConstraintDescription: must contain only alphanumeric characters.
+Resources:
+  Idris:
+    Type: AWS::IAM::User
+    Properties:
+      LoginProfile:
+        Password: !Ref IAMPassword
+        PasswordResetRequired: Yes
+      UserName: Idriss 
+  Claud:
+    Type: AWS::IAM::User
+    Properties:
+      LoginProfile:
+        Password: !Ref IAMPassword
+        PasswordResetRequired: Yes
+      UserName: Claudio 
+  Narc:
+    Type: AWS::IAM::User
+    Properties:
+      LoginProfile:
+        Password: !Ref IAMPassword 
+        PasswordResetRequired: Yes
+      UserName: Narcisse
+  # Rao:
+  #   Type: AWS::IAM::User
+  #   Properties:
+  #     LoginProfile:
+  #       Password: !Ref IAMPassword
+  #       PasswordResetRequired: Yes
+  # Gert:
+  #   Type: AWS::IAM::User
+  #   Properties:
+  #     LoginProfile:
+  #       Password: !Ref IAMPassword
+  #       PasswordResetRequired: Yes      
+  MyGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: African-Financial-Security-Team
+      # ManagedPolicyArns: 
+      #   - arn:aws:iam::aws:policy/AdministratorAccess 
+  Users:
+    Type: AWS::IAM::UserToGroupAddition
+    Properties:
+      GroupName:
+        Ref: MyGroup
+      Users:
+      - Ref: Idris
+      - Ref: Claud
+      - Ref: Narc
+  Policy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: AdministratorAccess
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: '*'
+            Resource: '*' 
+      Groups:
+        - !Ref MyGroup

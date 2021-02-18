@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: create an IAM users.
+Parameters:
+   IAMPassword: 
+    NoEcho: true
+    Description: The IAM user password (won't be echoed)
+    Type: String
+    MinLength: 1
+    MaxLength: 41
+    AllowedPattern: "[a-zA-Z0-9]*"
+    ConstraintDescription: must contain only alphanumeric characters.
+Resources:
+  Mik:
+    Type: AWS::IAM::User
+    Properties:
+      LoginProfile: 
+        Password: !Ref IAMPassword
+        PasswordResetRequired: Yes
+      UserName: Mike
+  Joh:
+    Type: AWS::IAM::User
+    Properties:
+      LoginProfile:
+        Password: !Ref IAMPassword  
+        PasswordResetRequired: Yes
+      UserName: John
+  # Ciat:
+  #   Type: AWS::IAM::User
+  #   Properties:
+  #     LoginProfile:
+  #       Password: !Ref IAMPassword
+  #       PasswordResetRequired: Yes
+  #     UserName: Richard 
+  # Rao:
+  #   Type: AWS::IAM::User
+  #   Properties:
+  #     LoginProfile:
+  #       Password: !Ref IAMPassword
+  #       PasswordResetRequired: Yes
+  #     UserName: Richard 
+  # Gert:
+  #   Type: AWS::IAM::User
+  #   Properties:
+  #     LoginProfile:
+  #       Password: !Ref IAMPassword
+  #       PasswordResetRequired: Yes
+  #     UserName: Richard       
+  MyGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: African-Financial-Operations-Team  
+  Users:
+    Type: AWS::IAM::UserToGroupAddition
+    Properties:
+      GroupName:
+        Ref: MyGroup
+      Users:
+      - Ref: Mik
+      - Ref: Joh
+      # - Ref: Ciat
+      # - Ref: Gert
+  Policy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: DenyAllOutsideRequestedRegions
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: '*'
+            Resource: '*' 
+            Condition:
+              StringEquals:
+                'aws:RequestedRegion': us-east-1
+      Groups: 
+        - !Ref MyGroup  

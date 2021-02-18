@@ -1,0 +1,30 @@
+
+AWSTemplateFormatVersion: 2010-09-09
+Description: Create a VPC and a VPC Peering connection using the PeerRole to accept. do not use the root accoun
+Parameters:
+  PeerVPCAccountId: # account id of n2g
+    Type: String
+    Default: '542148333816'
+  PeerVPCId: # vpc id of n2g
+    Type: String
+    Default: vpc-69d3d913
+  PeerRoleArn: # role created par n2g in their account
+    Type: String
+    Default: arn:aws:iam::542148333816:role/Lion-peering-role-peerRole-1U37V21IYUAUO
+  VpcId: # vpc of cloudspace
+    Type: String
+    Default: vpc-05ed8b15d470b863a
+
+Resources:
+
+  vpcPeeringConnection:
+    Type: 'AWS::EC2::VPCPeeringConnection'
+    Properties:
+      VpcId:
+        Ref: VpcId
+      PeerVpcId:
+        Ref: PeerVPCId
+      PeerOwnerId:
+        Ref: PeerVPCAccountId
+      PeerRoleArn:
+        Ref: PeerRoleArn
